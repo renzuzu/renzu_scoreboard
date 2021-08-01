@@ -10,7 +10,7 @@ FIVEM - SCOREBOARD UI - UNIQUE DESIGN
 - Whitelisted Jobs Features in Scoreboard Header
 - Ghmatti and Mysql Async Support
 - Steam Avatar
-- Made from scrath with love.
+- Made from scratch with love.
 
 # PREVIEW
 ![image](https://user-images.githubusercontent.com/82306584/127774646-c567f003-f64d-4665-a203-abeab312849d.png)

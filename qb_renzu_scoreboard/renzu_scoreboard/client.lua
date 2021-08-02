@@ -19,6 +19,8 @@ end)
 
 RegisterNUICallback('avatarupload', function(data, cb)
     TriggerServerEvent('renzu_scoreboard:avatarupload',data.url)
+    SetNuiFocus(false,false)
+    SetNuiFocusKeepInput(false)
 end)
 
 function OpenScoreboard()

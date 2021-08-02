@@ -18,7 +18,7 @@ function GetAvatar(source,first,last)
     local source = source
     local image = nil
     local steamhex = GetPlayerIdentifier(source, 0)
-    local initials = math.random(#config.RandomAvatars)
+    local initials = math.random(1,#config.RandomAvatars)
     local letters = config.RandomAvatars[initials]
     if steamhex ~= nil and steamhex ~= '' then
         local steamid = tonumber(string.gsub(steamhex, 'steam:', ''), 16)

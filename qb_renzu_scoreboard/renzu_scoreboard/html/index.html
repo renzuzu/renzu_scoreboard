@@ -1,0 +1,71 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;500;600;700&amp;display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+    <script src="https://kit.fontawesome.com/44e6403392.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body translate="no">
+    <article class="leaderboard" id="scoreboard" style="display: none;">
+      <header>
+        <img version="1.1" style="enable-background:new 0 0 511.999 511.999;" xml:space="preserve" class="leaderboard__icon" id="logo" src="https://forum.cfx.re/uploads/default/original/4X/b/1/9/b196908c7e5dfcd60aa9dca0020119fa55e184cb.png">
+        <h1 class="leaderboard__title" style=" position: absolute; z-index: 2; top: 50%; left: calc(var(--start) * .91); transform: translateY(-50%); text-transform: uppercase; margin: 0;">
+          <span class="leaderboard__title--top" style="padding: 0 0 5px;position: absolute;top: -5px;font-size: 19px;">
+            <i class="fad fa-briefcase"></i> JOBS </span>
+          <span id="jobs"></span>
+        </h1>
+        <button id="myBtn" style="width: 50px; /* max-width: 20px; */ /* height: 40px; */ position: absolute; top: 3.4%; right: 0.4%; padding: 1px; background-color: #01588c; border: 1px solid #27272726; /* opacity: 0.1;">
+          <img id="myavatar" src="https://forum.cfx.re/uploads/default/original/4X/b/1/9/b196908c7e5dfcd60aa9dca0020119fa55e184cb.png" style=" width: 100%; ">
+        </button>
+        <h1 class="leaderboard__title">
+          <span class="leaderboard__title--top" id="title1">Roleplay</span>
+          <span class="leaderboard__title--bottom" id="title2">Scoreboard</span>
+          <span class="leaderboard__title--bottom">
+            <i class="fas fa-male"></i>
+            <content id="count">561</content>/ <content id="max">1024</content>
+          </span>
+        </h1>
+      </header>
+      <main class="leaderboard__profiles" id="main"></main>
+      <!-- Trigger/Open The Modal -->
+      <!-- The Modal -->
+      <div id="myModal" class="modal" style="display: none;">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close">×</span>
+            <h2>Avatar Setting</h2>
+          </div>
+          <div class="modal-body">
+            <form id="manage" action="index.html" method="post" style="">
+              <label for="url">Avatar URL:</label>
+              <input type="text" id="url" name="url">
+              <button id="changeavatar">Change Avatar</button>
+            </form>
+            <img id="currentavatar" src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/0a/0afd0496fab960adffbc86933c84a7ca70d1261b_full.jpg" alt="profile" class="leaderboard__picture" style="    position: absolute;top: 41%;right: 4%;width: 120px;">
+          </div>
+        </div>
+      </div>
+      <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+      <script src="script.js"></script>
+      <script>
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("myBtn");
+        var span = document.getElementsByClassName("close")[0];
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+      </script>
+    </article>
+  </body>
+</html>

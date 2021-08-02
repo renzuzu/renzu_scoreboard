@@ -67,7 +67,7 @@ RegisterCommand('scoreboard', function()
     end
     open = not open
 end, false)
-RegisterKeyMapping('scoreboard', 'Scoreboard (player online)', 'keyboard', 'F10')
+RegisterKeyMapping('scoreboard', 'Scoreboard (player online)', 'keyboard', config.keybind)
 
 Citizen.CreateThread(function()
 	while true do

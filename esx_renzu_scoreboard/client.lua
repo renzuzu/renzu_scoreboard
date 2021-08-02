@@ -19,8 +19,12 @@ AddEventHandler('esx:playerLoaded', function(xPlayer)
 	TriggerServerEvent('renzu_scoreboard:playerloaded')
 end)
 
+RegisterNUICallback('avatarupload', function(data, cb)
+    TriggerServerEvent('renzu_scoreboard:avatarupload',data.url)
+end)
+
 function OpenScoreboard()
-    ESX.TriggerServerCallback("renzu_scoreboard:playerlist",function(data,jobs,count,admin)
+    ESX.TriggerServerCallback("renzu_scoreboard:playerlist",function(data,jobs,count,admin,myimage)
         for k,v in pairs(config.whitelistedjobs) do
             v.count = 0
             if jobs[v.name] ~= nil then
@@ -33,7 +37,7 @@ function OpenScoreboard()
         end
         SendNUIMessage({
             type = 'show',
-            content = {players = data, whitelistedjobs = config.whitelistedjobs, count = count, max = GetConvarInt('sv_maxclients', 256), useidentity = config.UseIdentityname, isadmin = admin, showid = showid, showadmins = config.ShowAdmins, showvip = config.ShowVips, showjobs = config.ShowJobs}
+            content = {players = data, whitelistedjobs = config.whitelistedjobs, count = count, max = GetConvarInt('sv_maxclients', 256), useidentity = config.UseIdentityname, isadmin = admin, showid = showid, showadmins = config.ShowAdmins, showvip = config.ShowVips, showjobs = config.ShowJobs, myimage = myimage}
         })
         Wait(50)
         SetNuiFocus(true,true)

@@ -14,6 +14,24 @@ CreateThread(function()
     TriggerClientEvent("renzu_scoreboard:loaded",-1)
 end)
 
+function UploadAvatar(identifier, avatar)
+    Database(config.Mysql,'execute','UPDATE users SET avatar = @avatar WHERE identifier = @identifier',
+        {
+            ['@avatar'] = avatar,
+            ['@identifier'] = identifier
+    })
+end
+
+RegisterNetEvent('renzu_scoreboard:avatarupload')
+AddEventHandler('renzu_scoreboard:avatarupload', function(url)
+    local source = tonumber(source)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    if players[source] ~= nil then
+        UploadAvatar(xPlayer.identifier, url)
+        players[source].image = url
+    end
+end)
+
 function GetAvatar(source,first,last)
     local source = source
     local image = nil
@@ -46,6 +64,8 @@ RegisterNetEvent('renzu_scoreboard:playerloaded')
 AddEventHandler('renzu_scoreboard:playerloaded', function()
     local source = tonumber(source)
     local xPlayer = ESX.GetPlayerFromId(source)
+    local initials = math.random(1,#config.RandomAvatars)
+    local letters = config.RandomAvatars[initials]
     if players[source] == nil and xPlayer ~= nil and loading[source] == nil then
         loading[source] = true
         playerdata = nil
@@ -66,7 +86,13 @@ AddEventHandler('renzu_scoreboard:playerloaded', function()
             if (name:find("script") ~= nil) then
                 name = "Blacklisted name"
             end
-            if config.UseDiscordAvatar then
+            if config.UseSelfUploadAvatar then
+                if playernames[xPlayer.identifier].avatar ~= nil and playernames[xPlayer.identifier].avatar ~= '' then
+                    avatar = playernames[xPlayer.identifier].avatar
+                else
+                    avatar = 'https://ui-avatars.com/api/?name='..f..'+'..l..'&background='..letters.background..'&color='..letters.color..''
+                end
+            elseif config.UseDiscordAvatar then
                 avatar = GetDiscordAvatar(source)
             else
                 avatar = GetAvatar(source,f,l)
@@ -101,7 +127,7 @@ ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
     for k,v in pairs(players) do count = count + 1 end
     xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer ~= nil then
-        cb(list, whitelistedjobs, count, xPlayer.getGroup() == 'superadmin')
+        cb(list, whitelistedjobs, count, xPlayer.getGroup() == 'superadmin',list[source].image)
     end
 end)
 

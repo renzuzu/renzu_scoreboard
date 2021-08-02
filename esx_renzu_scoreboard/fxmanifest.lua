@@ -1,4 +1,4 @@
-fx_version 'cerulean'
+fx_version 'adamant'
 -- Renzu Scoreboard
 -- MADE BY Renzuzu
 game 'gta5'

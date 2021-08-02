@@ -121,6 +121,121 @@ body {
   top: 2%;
   /* height: 100%; */
 }
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+position: fixed;
+z-index: 1;
+padding-top: 250px;
+left: 20%;
+/* left: 0; */
+top: 0;
+width: 70%;
+height: 100%;
+overflow: auto;
+border-radius: 10px;
+}
+
+/* Modal Content */
+.modal-content {
+  position: relative;
+background-color: #000000e0;
+margin: auto;
+padding: 0;
+border: 1px solid #888;
+width: 55%;
+box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+-webkit-animation-name: animatetop;
+-webkit-animation-duration: 0.4s;
+animation-name: animatetop;
+animation-duration: 0.4s;
+color: #2097ff;
+border-radius: 20px;
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+  from {top:-300px; opacity:0} 
+  to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-header {
+  padding: 5px 5px;
+color: white;
+background: rgb(4,38,71);
+background: linear-gradient( 
+90deg
+, rgba(4,38,71,1) 0%, rgba(0,42,97,0.9164040616246498) 35%, rgba(6,109,193,1) 100%);
+border-radius: 20px;
+}
+
+.modal-body {padding: 2px 16px;}
+
+form {
+max-width: 67%;
+margin: 10px;
+padding: 20px 20px;
+background: #031a38;
+border-radius: 8px;
+}
+
+h1 {
+font-size:20px;
+margin: 0 0 30px 0;
+text-align: center;
+}
+
+input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], textarea, select {
+background: rgba(255,255,255,0.1);
+border: none;
+font-size: 16px;
+height: auto;
+margin: 0;
+outline: 0;
+padding: 8px;
+width: 95%;
+background-color: #0000003d;
+color: #8a97a0;
+box-shadow: 0 1px 0 rgb(0 0 0 / 3%) inset;
+margin-bottom: 30px;
+}
+button {
+padding: 19px 39px 18px 39px;
+color: #FFF;
+background-color: #4bc970;
+font-size: 18px;
+text-align: center;
+font-style: normal;
+border-radius: 5px;
+width: 100%;
+border: 1px solid #3ac162;
+border-width: 1px 1px 3px;
+box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+margin-bottom: 10px;
+}
+
+                
 body::-webkit-scrollbar {
   width: 2em;
 }

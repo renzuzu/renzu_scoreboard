@@ -16,3 +16,9 @@ FIVEM - SCOREBOARD UI - UNIQUE DESIGN
 ![image](https://user-images.githubusercontent.com/82306584/127774646-c567f003-f64d-4665-a203-abeab312849d.png)
 # Dependency
 - ESX FRAMEWORK
+
+# Install
+- Download Latest 
+- start renzu_scoreboard (rename esx_renzu_scoreboard to renzu_scoreboard or else some func will not work)
+- import scoreboard.sql to heidisql or phpmyadmin to support self upload avatars
+- configure the config.lua to your liking

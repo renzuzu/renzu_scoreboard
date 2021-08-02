@@ -126,7 +126,7 @@ ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
     local count = 0
     for k,v in pairs(players) do count = count + 1 end
     xPlayer = ESX.GetPlayerFromId(source)
-    if xPlayer ~= nil then
+    if xPlayer ~= nil and list[source] ~= nil then
         cb(list, whitelistedjobs, count, xPlayer.getGroup() == 'superadmin',list[source].image)
     end
 end)

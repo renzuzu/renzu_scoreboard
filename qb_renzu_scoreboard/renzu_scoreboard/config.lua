@@ -23,3 +23,4 @@ config.RandomAvatars = { -- if steam avatar is not available, we will use Initia
 }
 config.UseDiscordAvatar = false -- if true only discord avatar will be used and not steam (YOU NEED TO INSTALL THIS AND SETUP https://github.com/JaredScar/Badger_Discord_API)
 config.UseSelfUploadAvatar = true -- if true steam, discord avatar will be ignored: initials avatar is default if photo is missing/nil
+config.CheckpingOnce = true -- save and check only ping once (more optimized for large city)

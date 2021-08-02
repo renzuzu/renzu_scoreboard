@@ -116,7 +116,16 @@ QBCore.Functions.CreateCallback('renzu_scoreboard:playerlist', function(source, 
             end
         end
         if Player ~= nil then
-            table.insert(list, {id = v.id, job = Player.PlayerData.job.name, name = v.name, firstname = v.first, lastname = v.last, image = v.image, ping = GetPlayerPing(v.id), admin = isAdmin(v.id), vip = v.vip})
+            local ping = nil
+            if pings[v.id] == nil and config.CheckpingOnce then
+                pings[v.id] = GetPlayerPing(v.id)
+            elseif not config.CheckpingOnce then
+                ping = GetPlayerPing(v.id)
+            end
+            if config.CheckpingOnce and pings[v.id] ~= nil then
+                ping = pings[v.id]
+            end
+            table.insert(list, {id = v.id, job = Player.PlayerData.job.name, name = v.name, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = isAdmin(v.id), vip = v.vip})
         end
     end
     local count = 0

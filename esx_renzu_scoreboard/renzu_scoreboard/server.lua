@@ -103,6 +103,7 @@ AddEventHandler('renzu_scoreboard:playerloaded', function()
     end
 end)
 
+local pings = {}
 ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
     local list = {}
     local whitelistedjobs = {}
@@ -120,7 +121,16 @@ ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
             end
         end
         if xPlayer ~= nil then
-            table.insert(list, {id = v.id, job = xPlayer.job.label, name = v.name, firstname = v.first, lastname = v.last, image = v.image, ping = GetPlayerPing(v.id), admin = xPlayer.getGroup() == 'superadmin', vip = v.vip})
+            local ping = nil
+            if pings[v.id] == nil and config.CheckpingOnce then
+                pings[v.id] = GetPlayerPing(v.id)
+            elseif not config.CheckpingOnce then
+                ping = GetPlayerPing(v.id)
+            end
+            if config.CheckpingOnce and pings[v.id] ~= nil then
+                ping = pings[v.id]
+            end
+            table.insert(list, {id = v.id, job = xPlayer.job.label, name = v.name, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = xPlayer.getGroup() == 'superadmin', vip = v.vip})
         end
     end
     local count = 0

@@ -108,9 +108,11 @@ var admin = false
           console.log($( "form" ).serialize())
             for (const i in $( "form" ).serializeArray()) {
               var url = $( "form" ).serializeArray()
-              if (imageExists(url[i].value)) {
-                console.log("UPLOAD")
-                $.post("https://renzu_scoreboard/avatarupload",JSON.stringify({url:url[i].value}),function(datab){});
+              if (checkURL(url[i].value)) {
+                if (imageExists(url[i].value)) {
+                  console.log("UPLOAD")
+                  $.post("https://renzu_scoreboard/avatarupload",JSON.stringify({url:url[i].value}),function(datab){});
+                }
               }
             }
         });
@@ -138,4 +140,7 @@ var admin = false
         if (event.target == modal) {
           modal.style.display = "none";
         }
+      }
+      function checkURL(url) {
+        return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
       }

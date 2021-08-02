@@ -6,7 +6,7 @@ var admin = false
         function Addplayers(table,identity) {
             for (const i in table.whitelistedjobs) {
               $("#jobs").prepend(`<span style="position: relative;float:left;margin-right: 20px;opacity: 1.0;margin-top: 20px;">
-              <span class="leaderboard__title--bottom" style="opacity: 1.0;">`+table.whitelistedjobs[i].fa+` `+table.whitelistedjobs[i].name+`</span>
+              <span class="leaderboard__title--bottom" style="opacity: 1.0;">`+table.whitelistedjobs[i].fa+` `+table.whitelistedjobs[i].label+`</span>
               <span class="leaderboard__title--bottom" style="float: right;"><content id="jobcount">`+table.whitelistedjobs[i].count+`</content></span>
               </span>`);
             }

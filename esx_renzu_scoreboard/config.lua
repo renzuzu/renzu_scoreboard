@@ -8,9 +8,9 @@ config.adminfa = '<i class="fad fa-crown"></i>' -- font awsome icon to show
 config.vipfa = '<i class="fad fa-star"></i>' -- fontawsome, change this whatever icon you want from fontawsome
 config.ShowVips = true -- if true the player with users.vip will show a vip badge
 config.whitelistedjobs = {
-    [1] = {name = 'police', fa = '<i class="fad fa-siren-on"></i>'},
-    [2] = {name = 'mechanic', fa = '<i class="fad fa-car-mechanic"></i>'},
-    [3] = {name = 'ambulance', fa = '<i class="fas fa-user-md"></i>'},
+    [1] = {name = 'police', fa = '<i class="fad fa-siren-on"></i>', label = 'Police'},
+    [2] = {name = 'mechanic', fa = '<i class="fad fa-car-mechanic"></i>', label = 'Mechanic'},
+    [3] = {name = 'ambulance', fa = '<i class="fas fa-user-md"></i>', label = 'EMS'},
 }
 config.RandomAvatars = { -- if steam avatar is not available, we will use Initials avatar
     [1] = {background = 'ffffff', color = '308BFF'},

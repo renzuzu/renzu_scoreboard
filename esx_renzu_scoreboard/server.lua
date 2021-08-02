@@ -94,7 +94,7 @@ ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
             end
         end
         if xPlayer ~= nil then
-            table.insert(list, {id = v.id, job = xPlayer.job.name, name = v.name, firstname = v.first, lastname = v.last, image = v.image, ping = GetPlayerPing(v.id), admin = xPlayer.getGroup() == 'superadmin', vip = v.vip})
+            table.insert(list, {id = v.id, job = xPlayer.job.label, name = v.name, firstname = v.first, lastname = v.last, image = v.image, ping = GetPlayerPing(v.id), admin = xPlayer.getGroup() == 'superadmin', vip = v.vip})
         end
     end
     local count = 0

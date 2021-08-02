@@ -88,10 +88,14 @@ var admin = false
           if (data.keyCode == '27') { // Escape key 76 = L (Change the 76 to whatever keycodes you want to hide the carlock ui LINK https://css-tricks.com/snippets/javascript/javascript-keycodes/)
             $.post("https://renzu_scoreboard/close",{},function(datab){});
             document.getElementById("scoreboard").style.display = "none";
+            document.getElementById("main").innerHTML = '';
+            document.getElementById("jobs").innerHTML = '';
           }
           if (data.keyCode == '121') { // Escape key 76 = L (Change the 76 to whatever keycodes you want to hide the carlock ui LINK https://css-tricks.com/snippets/javascript/javascript-keycodes/)
             $.post("https://renzu_scoreboard/close",{},function(datab){});
             document.getElementById("scoreboard").style.display = "none";
+            document.getElementById("main").innerHTML = '';
+            document.getElementById("jobs").innerHTML = '';
           }
         }
         function imageExists(image_url){

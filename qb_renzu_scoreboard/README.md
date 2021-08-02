@@ -13,4 +13,4 @@ FIVEM - SCOREBOARD UI - UNIQUE DESIGN
 - Made from scrath with love.
 
 # Dependency
-- ESX FRAMEWORK
+- QBCORE FRAMEWORK

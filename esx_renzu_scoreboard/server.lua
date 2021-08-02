@@ -135,6 +135,7 @@ RegisterServerEvent('playerDropped')
 AddEventHandler('playerDropped', function()
     local source = tonumber(source)
     players[source] = nil
+    loading[source] = nil
 end)
 
 function Database(plugin,type,query,var)

@@ -1,5 +1,6 @@
 config = {}
 config.Mysql = 'mysql-async' -- "ghmattisql", "msyql-async"
+config.logo = 'https://forum.cfx.re/uploads/default/original/4X/b/1/9/b196908c7e5dfcd60aa9dca0020119fa55e184cb.png' -- url of logo
 config.UseIdentityname = true -- will not use steamname and it will use a firstname lastname from users table
 config.Showid = true -- if false only admins can see the id
 config.ShowAdmins = true -- if true admin badge will show near the avatar

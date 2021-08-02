@@ -72,6 +72,7 @@ var admin = false
               $("#myavatar").attr("src", event.content.myimage);
               $("#currentavatar").attr("src", event.content.myimage);
             }
+            $("#logo").attr("src", event.content.logo);
             Addplayers(event.content)
             document.getElementById("scoreboard").style.display = "block";
             document.getElementById("count").innerHTML = event.content.count;

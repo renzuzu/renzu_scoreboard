@@ -19,6 +19,6 @@ FIVEM - SCOREBOARD UI - UNIQUE DESIGN
 
 # Install
 - Download Latest 
-- start renzu_scoreboard (rename qb_renzu_scoreboard to renzu_scoreboard or else some func will not work)
+- start renzu_scoreboard
 - import scoreboard.sql to heidisql or phpmyadmin to support self upload avatars
 - configure the config.lua to your liking

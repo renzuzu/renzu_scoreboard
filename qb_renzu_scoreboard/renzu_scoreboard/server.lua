@@ -123,7 +123,7 @@ QBCore.Functions.CreateCallback('renzu_scoreboard:playerlist', function(source, 
     for k,v in pairs(players) do count = count + 1 end
     Player = QBCore.Functions.GetPlayer(source)
     if Player ~= nil then
-        cb(list, whitelistedjobs, count, isAdmin(source),list[source].image)
+        cb(list, whitelistedjobs, count, isAdmin(source),players[source].image)
     end
 end)
 

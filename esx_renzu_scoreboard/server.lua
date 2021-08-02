@@ -22,7 +22,7 @@ function UploadAvatar(identifier, avatar)
     })
 end
 
-RegisterNetEvent('renzu_scoreboard:avatarupload')
+RegisterServerEvent('renzu_scoreboard:avatarupload')
 AddEventHandler('renzu_scoreboard:avatarupload', function(url)
     local source = tonumber(source)
     local xPlayer = ESX.GetPlayerFromId(source)
@@ -60,7 +60,7 @@ function GetDiscordAvatar(source)
 end
 
 local loading = {}
-RegisterNetEvent('renzu_scoreboard:playerloaded')
+RegisterServerEvent('renzu_scoreboard:playerloaded')
 AddEventHandler('renzu_scoreboard:playerloaded', function()
     local source = tonumber(source)
     local xPlayer = ESX.GetPlayerFromId(source)
@@ -70,36 +70,36 @@ AddEventHandler('renzu_scoreboard:playerloaded', function()
         loading[source] = true
         playerdata = nil
         local f,l,v = '', '', false
-            if playernames[xPlayer.identifier] ~= nil and playernames[xPlayer.identifier].firstname ~= nil and config.UseIdentityname then
-                f = playernames[xPlayer.identifier].firstname
-                l = playernames[xPlayer.identifier].lastname
+        if playernames[xPlayer.identifier] ~= nil and playernames[xPlayer.identifier].firstname ~= nil and config.UseIdentityname then
+            f = playernames[xPlayer.identifier].firstname
+            l = playernames[xPlayer.identifier].lastname
+        end
+        if config.ShowVips then
+            if playernames[xPlayer.identifier].vip ~= nil then
+                v = playernames[xPlayer.identifier].vip ~= nil
             end
-            if config.ShowVips then
-                if playernames[xPlayer.identifier].vip ~= nil then
-                    v = playernames[xPlayer.identifier].vip ~= nil
-                end
-            end
-            local name = GetPlayerName(source)
-            if (name:find("src") ~= nil) then
-                name = "Blacklisted name"
-            end
-            if (name:find("script") ~= nil) then
-                name = "Blacklisted name"
-            end
-            if config.UseSelfUploadAvatar then
-                if playernames[xPlayer.identifier].avatar ~= nil and playernames[xPlayer.identifier].avatar ~= '' then
-                    avatar = playernames[xPlayer.identifier].avatar
-                else
-                    avatar = 'https://ui-avatars.com/api/?name='..f..'+'..l..'&background='..letters.background..'&color='..letters.color..''
-                end
-            elseif config.UseDiscordAvatar then
-                avatar = GetDiscordAvatar(source)
+        end
+        local name = GetPlayerName(source)
+        if (name:find("src") ~= nil) then
+            name = "Blacklisted name"
+        end
+        if (name:find("script") ~= nil) then
+            name = "Blacklisted name"
+        end
+        if config.UseSelfUploadAvatar then
+            if playernames[xPlayer.identifier].avatar ~= nil and playernames[xPlayer.identifier].avatar ~= '' then
+                avatar = playernames[xPlayer.identifier].avatar
             else
-                avatar = GetAvatar(source,f,l)
+                avatar = 'https://ui-avatars.com/api/?name='..f..'+'..l..'&background='..letters.background..'&color='..letters.color..''
             end
-            if players[source] == nil then
-                players[source] = {id = source, image = avatar, first = f, last = l, name = name, vip = v}
-            end
+        elseif config.UseDiscordAvatar then
+            avatar = GetDiscordAvatar(source)
+        else
+            avatar = GetAvatar(source,f,l)
+        end
+        if players[source] == nil then
+            players[source] = {id = source, image = avatar, first = f, last = l, name = name, vip = v}
+        end
     end
 end)
 
@@ -126,8 +126,8 @@ ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
     local count = 0
     for k,v in pairs(players) do count = count + 1 end
     xPlayer = ESX.GetPlayerFromId(source)
-    if xPlayer ~= nil and list[source] ~= nil then
-        cb(list, whitelistedjobs, count, xPlayer.getGroup() == 'superadmin',list[source].image)
+    if xPlayer ~= nil and players[source] ~= nil then
+        cb(list, whitelistedjobs, count, xPlayer.getGroup() == 'superadmin',players[source].image)
     end
 end)
 

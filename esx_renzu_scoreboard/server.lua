@@ -14,17 +14,42 @@ CreateThread(function()
     TriggerClientEvent("renzu_scoreboard:loaded",-1)
 end)
 
+function GetAvatar(source,first,last)
+    local source = source
+    local image = nil
+    local steamhex = GetPlayerIdentifier(source, 0)
+    local initials = math.random(#config.RandomAvatars)
+    local letters = config.RandomAvatars[initials]
+    if steamhex ~= nil and steamhex ~= '' then
+        local steamid = tonumber(string.gsub(steamhex, 'steam:', ''), 16)
+        PerformHttpRequest('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' .. GetConvar('steam_webApiKey') .. '&steamids=' .. steamid, function(e, data, h)
+            local data = json.decode(data)
+            local avatar = data.response.players[1].avatarfull
+            image = avatar
+        end)
+        local c = 0
+        while image == nil and c < 100 do c = c + 1 Wait(1) end
+        if image == nil then image = 'https://ui-avatars.com/api/?name='..first..'+'..last..'&background='..letters.background..'&color='..letters.color..'' end
+        return image
+    else
+        return 'https://ui-avatars.com/api/?name='..first..'+'..last..'&background='..letters.background..'&color='..letters.color..''
+    end
+end
+
+function GetDiscordAvatar(source)
+    local source = source
+    return exports.Badger_Discord_API:GetDiscordAvatar(source);
+end
+
+local loading = {}
 RegisterNetEvent('renzu_scoreboard:playerloaded')
 AddEventHandler('renzu_scoreboard:playerloaded', function()
     local source = tonumber(source)
     local xPlayer = ESX.GetPlayerFromId(source)
-    if players[source] == nil and xPlayer ~= nil then
+    if players[source] == nil and xPlayer ~= nil and loading[source] == nil then
+        loading[source] = true
         playerdata = nil
-        local steamid = tonumber(string.gsub(GetPlayerIdentifier(source, 0), 'steam:', ''), 16)
-        PerformHttpRequest('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' .. GetConvar('steam_webApiKey') .. '&steamids=' .. steamid, function(e, data, h)
-            local data = json.decode(data)
-            local avatar = data.response.players[1].avatarfull
-            local f,l,v = '', '', false
+        local f,l,v = '', '', false
             if playernames[xPlayer.identifier] ~= nil and playernames[xPlayer.identifier].firstname ~= nil and config.UseIdentityname then
                 f = playernames[xPlayer.identifier].firstname
                 l = playernames[xPlayer.identifier].lastname
@@ -41,10 +66,14 @@ AddEventHandler('renzu_scoreboard:playerloaded', function()
             if (name:find("script") ~= nil) then
                 name = "Blacklisted name"
             end
+            if config.UseDiscordAvatar then
+                avatar = GetDiscordAvatar(source)
+            else
+                avatar = GetAvatar(source,f,l)
+            end
             if players[source] == nil then
                 players[source] = {id = source, image = avatar, first = f, last = l, name = name, vip = v}
             end
-        end)
     end
 end)
 

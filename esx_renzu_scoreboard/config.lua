@@ -12,3 +12,11 @@ config.whitelistedjobs = {
     [2] = {name = 'mechanic', fa = '<i class="fad fa-car-mechanic"></i>'},
     [3] = {name = 'ambulance', fa = '<i class="fas fa-user-md"></i>'},
 }
+config.RandomAvatars = { -- if steam avatar is not available, we will use Initials avatar
+    [1] = {background = 'ffffff', color = '308BFF'},
+    [2] = {background = 'E2E519', color = '222'},
+    [3] = {background = 'FF306E', color = 'ffffff'},
+    [4] = {background = 'F000FF', color = 'ffffff'},
+    [5] = {background = '2F2730', color = 'ffffff'},
+}
+config.UseDiscordAvatar = false -- if true only discord avatar will be used and not steam (YOU NEED TO INSTALL THIS AND SETUP https://github.com/JaredScar/Badger_Discord_API)

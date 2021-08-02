@@ -39,7 +39,7 @@ var admin = false
                 vipdiv = ''
               }
               var jobdiv = `<span class="leaderboard__name" style="float: left;position: absolute;left: 30vw;font-weight: 700;font-size: 15px;"><i class="fad fa-user-tie"></i> `+capitalizeFirstLetter(table.players[i].job)+`</span>`
-              if (!showjobs) {
+              if (!showjobs && !admin) {
                 jobdiv = ''
               }
               //console.log(i,table[i].name)

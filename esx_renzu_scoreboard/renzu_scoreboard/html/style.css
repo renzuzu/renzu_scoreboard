@@ -79,7 +79,7 @@
   height: 40px;
 }
 .leaderboard__profile:hover {
-  transform: scale(1.2);
+  transform: scale(1.05);
   box-shadow: 0 9px 47px 11px rgba(51, 51, 51, 0.18);
 }
 .leaderboard__picture {

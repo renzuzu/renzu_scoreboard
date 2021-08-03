@@ -68,6 +68,10 @@ RegisterCommand('scoreboard', function()
         close()
     end
     open = not open
+    while open do
+        DisablePlayerFiring(PlayerId(),true)
+        Wait(5)
+    end
 end, false)
 RegisterKeyMapping('scoreboard', 'Scoreboard (player online)', 'keyboard', config.keybind)
 

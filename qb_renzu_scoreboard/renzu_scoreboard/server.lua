@@ -1,5 +1,6 @@
 local players = {}
 local playernames = {}
+local pings = {}
 local loaded = false
 CreateThread(function()
     Wait(200)

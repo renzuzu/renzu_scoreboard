@@ -1,5 +1,5 @@
 config = {}
-config.Mysql = 'mysql-async' -- "ghmattisql", "msyql-async"
+config.Mysql = 'mysql-async' -- "ghmattisql", "mysql-async"
 config.keybind = 'F10' -- change it whatever keybind do you like -- look more here https://docs.fivem.net/docs/game-references/input-mapper-parameter-ids/keyboard/
 config.logo = 'https://forum.cfx.re/uploads/default/original/4X/b/1/9/b196908c7e5dfcd60aa9dca0020119fa55e184cb.png' -- url of logo
 config.UseIdentityname = true -- will not use steamname and it will use a firstname lastname from users table

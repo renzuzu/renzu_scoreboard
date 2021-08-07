@@ -86,7 +86,7 @@ AddEventHandler('renzu_scoreboard:playerloaded', function()
         if (name:find("script") ~= nil) then
             name = "Blacklisted name"
         end
-        if config.UseSelfUploadAvatar and if playernames[xPlayer.identifier] ~= nil then
+        if config.UseSelfUploadAvatar and playernames[xPlayer.identifier] ~= nil then
             if playernames[xPlayer.identifier].avatar ~= nil and playernames[xPlayer.identifier].avatar ~= '' then
                 avatar = playernames[xPlayer.identifier].avatar
             else

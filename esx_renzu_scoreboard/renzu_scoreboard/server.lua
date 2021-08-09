@@ -1,5 +1,8 @@
 local players = {}
 local playernames = {}
+local GuildID = 1000000000 -- : -- change this to your GuildID
+local DiscToken = ".XssX9w." -- change this to your own discord token
+local FormattedToken = "Bot " .. DiscToken
 ESX = nil
 local loaded = false
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
@@ -54,54 +57,83 @@ function GetAvatar(source,first,last)
     end
 end
 
-function GetDiscordAvatar(source)
-    local source = source
-    return exports.Badger_Discord_API:GetDiscordAvatar(source);
-end
-
 local loading = {}
+local qued = {}
 RegisterServerEvent('renzu_scoreboard:playerloaded')
 AddEventHandler('renzu_scoreboard:playerloaded', function()
     local source = tonumber(source)
     local xPlayer = ESX.GetPlayerFromId(source)
     local initials = math.random(1,#config.RandomAvatars)
     local letters = config.RandomAvatars[initials]
-    if players[source] == nil and xPlayer ~= nil and loading[source] == nil then
-        loading[source] = true
-        playerdata = nil
-        local f,l,v = '', '', false
-        if playernames[xPlayer.identifier] ~= nil and playernames[xPlayer.identifier].firstname ~= nil and config.UseIdentityname then
-            f = playernames[xPlayer.identifier].firstname
-            l = playernames[xPlayer.identifier].lastname
-        end
-        if config.ShowVips and playernames[xPlayer.identifier] ~= nil then
-            if playernames[xPlayer.identifier].vip ~= nil then
-                v = playernames[xPlayer.identifier].vip ~= nil
-            end
-        end
-        local name = GetPlayerName(source)
-        if (name:find("src") ~= nil) then
-            name = "Blacklisted name"
-        end
-        if (name:find("script") ~= nil) then
-            name = "Blacklisted name"
-        end
-        if config.UseSelfUploadAvatar and playernames[xPlayer.identifier] ~= nil then
-            if playernames[xPlayer.identifier].avatar ~= nil and playernames[xPlayer.identifier].avatar ~= '' then
-                avatar = playernames[xPlayer.identifier].avatar
-            else
-                avatar = 'https://ui-avatars.com/api/?name='..f..'+'..l..'&background='..letters.background..'&color='..letters.color..''
-            end
-        elseif config.UseDiscordAvatar then
-            avatar = GetDiscordAvatar(source)
-        else
-            avatar = GetAvatar(source,f,l)
-        end
-        if players[source] == nil then
-            players[source] = {id = source, image = avatar, first = f, last = l, name = name, vip = v}
-        end
+    if xPlayer ~= nil and playernames[xPlayer.identifier] ~= nil and playernames[xPlayer.identifier].firstname ~= nil and playernames[xPlayer.identifier].firstname ~= '' then
+        CreatePlayer(source,xPlayer)
+    elseif xPlayer ~= nil and playernames[xPlayer.identifier] == nil then
+        CreatePlayer(source,xPlayer,true)
+    else
+        print('Xplayer is nil or player is not register in server table')
     end
 end)
+
+function CreatePlayer(source,xPlayer,quee)
+    local initials = math.random(1,#config.RandomAvatars)
+    local letters = config.RandomAvatars[initials]
+    CreateThread(function()
+        if quee then
+            print("id# "..source.."  QUED")
+            if xPlayer ~= nil and playernames[xPlayer.identifier] == nil then playernames[xPlayer.identifier] = {} end
+            while playernames[xPlayer.identifier].firstname == nil or playernames[v.identifier].firstname ~= nil and playernames[v.identifier].firstname:len() >= 3 do 
+                Wait(10000)
+                print("id# "..source.."  CHECKING PLAYER INFO")
+                local playerinfo = Database(config.Mysql,'fetchAll','SELECT * FROM users WHERE identifier = @identifier', {['@identifier'] = xPlayer.identifier})
+                if #playerinfo > 0 and playerinfo[1] ~= nil and playerinfo[1].firstname ~= nil and playerinfo[1].firstname ~= '' and playerinfo[1].firstname ~= 'null' then
+                    for k,v in pairs(playerinfo) do
+                        playernames[v.identifier] = v
+                    end
+                    print("id# "..source.." PLAYER IS REGISTERED Successfully",playernames[xPlayer.identifier].firstname)
+                    -- you can pass any client events here once the player is loaded ex. playerloaded event
+                    break
+                else
+                    print('id# '..source..' is requed, still creating character?')
+                end
+            end
+        end
+        if players[source] == nil and xPlayer ~= nil and loading[source] == nil then
+            loading[source] = true
+            playerdata = nil
+            local f,l,v = '', '', false
+            if playernames[xPlayer.identifier] ~= nil and playernames[xPlayer.identifier].firstname ~= nil then
+                f = playernames[xPlayer.identifier].firstname
+                l = playernames[xPlayer.identifier].lastname
+            end
+            if config.ShowVips and playernames[xPlayer.identifier] ~= nil then
+                if playernames[xPlayer.identifier].vip ~= nil then
+                    v = playernames[xPlayer.identifier].vip ~= nil
+                end
+            end
+            local name = GetPlayerName(source)
+            if (name:find("src") ~= nil) then
+                name = "Blacklisted name"
+            end
+            if (name:find("script") ~= nil) then
+                name = "Blacklisted name"
+            end
+            if config.UseSelfUploadAvatar and playernames[xPlayer.identifier] ~= nil then
+                if playernames[xPlayer.identifier].avatar ~= nil and playernames[xPlayer.identifier].avatar ~= '' then
+                    avatar = playernames[xPlayer.identifier].avatar
+                else
+                    avatar = 'https://ui-avatars.com/api/?name='..f..'+'..l..'&background='..letters.background..'&color='..letters.color..''
+                end
+            elseif config.UseDiscordAvatar then
+                avatar = GetDiscordAvatar(source,f,l)
+            else
+                avatar = GetAvatar(source,f,l)
+            end
+            if players[source] == nil then
+                players[source] = {id = source, image = avatar, first = f, last = l, name = name, discordname = GetDiscordName(source,f,l), vip = v}
+            end
+        end
+    end)
+end
 
 local pings = {}
 ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
@@ -130,7 +162,7 @@ ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
             if config.CheckpingOnce and pings[v.id] ~= nil then
                 ping = pings[v.id]
             end
-            table.insert(list, {id = v.id, job = xPlayer.job.label, name = v.name, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = xPlayer.getGroup() == 'superadmin', vip = v.vip})
+            table.insert(list, {id = v.id, job = xPlayer.job.label, name = v.name, discordname = v.discordname, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = xPlayer.getGroup() == 'superadmin', vip = v.vip})
         end
     end
     local count = 0
@@ -170,4 +202,91 @@ function Database(plugin,type,query,var)
         while data == nil do Wait(0) end
         return data
     end
+end
+
+function DiscordRequest(method, endpoint, jsondata)
+    local data = nil
+
+    PerformHttpRequest("https://discordapp.com/api/"..endpoint, function(errorCode, resultData, resultHeaders)
+        data = {data=resultData, code=errorCode, headers=resultHeaders}
+    end, method, #jsondata > 0 and json.encode(jsondata) or "", {["Content-Type"] = "application/json", ["Authorization"] = FormattedToken})
+
+    while data == nil do
+        Citizen.Wait(0)
+    end
+
+    return data
+end
+
+function DiscordUserData(id)
+
+    local member = DiscordRequest("GET", ("guilds/%s/members/%s"):format(GuildID, id), {})
+    if member.code == 200 then
+        local Userdata = json.decode(member.data)
+        return Userdata.user
+    end
+
+end
+
+function GetDiscordAvatar(user,f,l)
+    local id = string.gsub(ExtractIdentifiers(user).discord, "discord:", "")
+    local Userdata = DiscordUserData(id)
+    if Userdata ~= nil then
+        if (Userdata.avatar:sub(1, 1) and Userdata.avatar:sub(2, 2) == "_") then 
+            imgURL = "https://cdn.discordapp.com/avatars/" .. id .. "/" .. Userdata.avatar .. ".gif";
+        else 
+            imgURL = "https://cdn.discordapp.com/avatars/" .. id .. "/" .. Userdata.avatar .. ".png"
+        end
+    else
+        local initials = math.random(1,#config.RandomAvatars)
+        local letters = config.RandomAvatars[initials]
+        imgURL = 'https://ui-avatars.com/api/?name='..f..'+'..l..'&background='..letters.background..'&color='..letters.color..''
+    end
+
+    return imgURL
+end
+
+function GetDiscordName(user,f,l)
+    if config.useDiscordname then
+        local id = string.gsub(ExtractIdentifiers(user).discord, "discord:", "")
+        local Userdata = DiscordUserData(id)
+        if Userdata ~= nil then
+            return Userdata.username
+        else
+            return GetPlayerName(user) or ''..f..' '..l..'' -- default
+        end
+    else
+        return GetPlayerName(user) -- default
+    end
+end
+
+function ExtractIdentifiers(src)
+    local identifiers = {
+        steam = "",
+        ip = "",
+        discord = "",
+        license = "",
+        xbl = "",
+        live = ""
+    }
+    --Loop over all identifiers
+    for i = 0, GetNumPlayerIdentifiers(src) - 1 do
+        local id = GetPlayerIdentifier(src, i)
+        --Convert it to a nice table.
+        if string.find(id, "steam") then
+            identifiers.steam = id
+        elseif string.find(id, "ip") then
+            identifiers.ip = id
+        elseif string.find(id, "discord") then
+            identifiers.discord = id
+        elseif string.find(id, "license") then
+            identifiers.license = id
+        elseif string.find(id, "xbl") then
+            identifiers.xbl = id
+        elseif string.find(id, "live") then
+            identifiers.live = id
+        end
+    end
+
+    return identifiers
 end

@@ -29,5 +29,5 @@ shared_scripts {
 files {
 	'html/index.html',
 	'html/script.js',
-	'html/style.css',
+	'html/*.css',
 }

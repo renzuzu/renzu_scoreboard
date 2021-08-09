@@ -1,6 +1,11 @@
 local open = false
 local loaded = false
 Citizen.CreateThread(function()
+    Wait(100)
+    SendNUIMessage({
+        type  = 'css',
+        content = config.css
+    })
     Wait(2500)
     TriggerServerEvent('renzu_scoreboard:playerloaded')
 end)
@@ -37,7 +42,7 @@ function OpenScoreboard()
         end
         SendNUIMessage({
             type = 'show',
-            content = {players = data, whitelistedjobs = config.whitelistedjobs, count = count, max = GetConvarInt('sv_maxclients', 256), useidentity = config.UseIdentityname, isadmin = admin, showid = showid, showadmins = config.ShowAdmins, showvip = config.ShowVips, showjobs = config.ShowJobs, myimage = myimage, logo = config.logo}
+            content = {players = data, whitelistedjobs = config.whitelistedjobs, count = count, max = GetConvarInt('sv_maxclients', 256), useidentity = config.UseIdentityname, usediscordname = config.useDiscordname, isadmin = admin, showid = showid, showadmins = config.ShowAdmins, showvip = config.ShowVips, showjobs = config.ShowJobs, myimage = myimage, logo = config.logo}
         })
         Wait(50)
         SetNuiFocus(true,true)

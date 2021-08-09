@@ -1,5 +1,8 @@
 local players = {}
 local playernames = {}
+local GuildID = 1000000000 -- : -- change this to your GuildID
+local DiscToken = ".XssX9w." -- change this to your own discord token
+local FormattedToken = "Bot " .. DiscToken
 local pings = {}
 local loaded = false
 CreateThread(function()
@@ -46,11 +49,6 @@ function GetAvatar(source,first,last)
     end
 end
 
-function GetDiscordAvatar(source)
-    local source = source
-    return exports.Badger_Discord_API:GetDiscordAvatar(source);
-end
-
 local loading = {}
 RegisterNetEvent('renzu_scoreboard:playerloaded')
 AddEventHandler('renzu_scoreboard:playerloaded', function()
@@ -85,12 +83,12 @@ AddEventHandler('renzu_scoreboard:playerloaded', function()
                     avatar = 'https://ui-avatars.com/api/?name='..f..'+'..l..'&background='..letters.background..'&color='..letters.color..''
                 end
             elseif config.UseDiscordAvatar then
-                avatar = GetDiscordAvatar(source)
+                avatar = GetDiscordAvatar(source,f,l)
             else
                 avatar = GetAvatar(source,f,l)
             end
             if players[source] == nil then
-                players[source] = {id = source, image = avatar, first = f, last = l, name = name, vip = v}
+                players[source] = {id = source, image = avatar, first = f, last = l, name = name, discordname = GetDiscordName(source,f,l), vip = v}
             end
     end
 end)
@@ -126,7 +124,7 @@ QBCore.Functions.CreateCallback('renzu_scoreboard:playerlist', function(source, 
             if config.CheckpingOnce and pings[v.id] ~= nil then
                 ping = pings[v.id]
             end
-            table.insert(list, {id = v.id, job = Player.PlayerData.job.name, name = v.name, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = isAdmin(v.id), vip = v.vip})
+            table.insert(list, {id = v.id, job = Player.PlayerData.job.name, name = v.name, discordname = v.discordname, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = isAdmin(v.id), vip = v.vip})
         end
     end
     local count = 0
@@ -143,3 +141,90 @@ AddEventHandler('playerDropped', function()
     players[source] = nil
     loading[source] = nil
 end)
+
+function DiscordRequest(method, endpoint, jsondata)
+    local data = nil
+
+    PerformHttpRequest("https://discordapp.com/api/"..endpoint, function(errorCode, resultData, resultHeaders)
+        data = {data=resultData, code=errorCode, headers=resultHeaders}
+    end, method, #jsondata > 0 and json.encode(jsondata) or "", {["Content-Type"] = "application/json", ["Authorization"] = FormattedToken})
+
+    while data == nil do
+        Citizen.Wait(0)
+    end
+
+    return data
+end
+
+function DiscordUserData(id)
+
+    local member = DiscordRequest("GET", ("guilds/%s/members/%s"):format(GuildID, id), {})
+    if member.code == 200 then
+        local Userdata = json.decode(member.data)
+        return Userdata.user
+    end
+
+end
+
+function GetDiscordAvatar(user,f,l)
+    local id = string.gsub(ExtractIdentifiers(user).discord, "discord:", "")
+    local Userdata = DiscordUserData(id)
+    if Userdata ~= nil then
+        if (Userdata.avatar:sub(1, 1) and Userdata.avatar:sub(2, 2) == "_") then 
+            imgURL = "https://cdn.discordapp.com/avatars/" .. id .. "/" .. Userdata.avatar .. ".gif";
+        else 
+            imgURL = "https://cdn.discordapp.com/avatars/" .. id .. "/" .. Userdata.avatar .. ".png"
+        end
+    else
+        local initials = math.random(1,#config.RandomAvatars)
+        local letters = config.RandomAvatars[initials]
+        imgURL = 'https://ui-avatars.com/api/?name='..f..'+'..l..'&background='..letters.background..'&color='..letters.color..''
+    end
+
+    return imgURL
+end
+
+function GetDiscordName(user,f,l)
+    if config.useDiscordname then
+        local id = string.gsub(ExtractIdentifiers(user).discord, "discord:", "")
+        local Userdata = DiscordUserData(id)
+        if Userdata ~= nil then
+            return Userdata.username
+        else
+            return GetPlayerName(user) or ''..f..' '..l..'' -- default
+        end
+    else
+        return GetPlayerName(user) -- default
+    end
+end
+
+function ExtractIdentifiers(src)
+    local identifiers = {
+        steam = "",
+        ip = "",
+        discord = "",
+        license = "",
+        xbl = "",
+        live = ""
+    }
+    --Loop over all identifiers
+    for i = 0, GetNumPlayerIdentifiers(src) - 1 do
+        local id = GetPlayerIdentifier(src, i)
+        --Convert it to a nice table.
+        if string.find(id, "steam") then
+            identifiers.steam = id
+        elseif string.find(id, "ip") then
+            identifiers.ip = id
+        elseif string.find(id, "discord") then
+            identifiers.discord = id
+        elseif string.find(id, "license") then
+            identifiers.license = id
+        elseif string.find(id, "xbl") then
+            identifiers.xbl = id
+        elseif string.find(id, "live") then
+            identifiers.live = id
+        end
+    end
+
+    return identifiers
+end

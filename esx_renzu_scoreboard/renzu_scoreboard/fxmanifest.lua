@@ -25,5 +25,5 @@ server_scripts {
 files {
 	'html/index.html',
 	'html/script.js',
-	'html/*.css',
+	'html/style.css',
 }

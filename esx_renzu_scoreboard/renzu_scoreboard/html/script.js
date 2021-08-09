@@ -14,9 +14,6 @@ var admin = false
               if (table.useidentity) {
                 table.players[i].name = ''+table.players[i].firstname+' '+table.players[i].lastname+''
               }
-              // if (table.usediscordname) {
-              //   table.players[i].name = ''+table.players[i].discordname+''
-              // }
               ping = '<i class="fad fa-wifi"></i> '+table.players[i].ping+''
               if (table.players[i].ping > 300) {
                 ping = '<i style="color:red;" class="fad fa-wifi"></i> '+table.players[i].ping+''
@@ -29,32 +26,27 @@ var admin = false
               }
               var admindiv = ''
               if (table.players[i].admin) {
-                admindiv = `<span class="leaderboard__name admin" style="float: left;position: absolute;left: 3vw;font-weight: 700;font-size: 15px;bottom: 8%;color: gold;"><i class="fad fa-crown"></i></span>`
+                admindiv = `<span class="leaderboard__name" style="float: left;position: absolute;left: 3vw;font-weight: 700;font-size: 15px;bottom: 8%;color: gold;"><i class="fad fa-crown"></i></span>`
               }
               if (!showadmins) {
                 admindiv = ''
               }
               var vipdiv = ''
               if (table.players[i].vip) {
-                vipdiv = `<span class="leaderboard__name vip" style="float: left;position: absolute;left: 5vw;font-weight: 700;font-size: 15px;bottom: 8%;color: #d206d2;"><i class="fad fa-star"></span>`
+                vipdiv = `<span class="leaderboard__name" style="float: left;position: absolute;left: 5vw;font-weight: 700;font-size: 15px;bottom: 8%;color: #d206d2;"><i class="fad fa-star"></span>`
               }
               if (!showvip) {
                 vipdiv = ''
               }
-              var jobdiv = `<span class="leaderboard__name job" style="float: left;position: absolute;left: 30vw;font-weight: 700;font-size: 15px;"><i class="fad fa-user-tie"></i> `+capitalizeFirstLetter(table.players[i].job)+`</span>`
+              var jobdiv = `<span class="leaderboard__name" style="float: left;position: absolute;left: 30vw;font-weight: 700;font-size: 15px;"><i class="fad fa-user-tie"></i> `+capitalizeFirstLetter(table.players[i].job)+`</span>`
               if (!showjobs && !admin) {
                 jobdiv = ''
-              }
-              var discdiv = ''
-              if (table.usediscordname) {
-                discdiv = '<span class="leaderboard__name discordname" style="float: left;position: absolute;left: 3vw;font-weight: 700;font-size: 1vh;bottom: 0.5vh;"><i class="fab fa-discord"></i> '+table.players[i].discordname+'</span>'
               }
               //console.log(i,table[i].name)
               $("#main").prepend(`<article class="leaderboard__profile">
               <img src="`+table.players[i].image+`" alt="`+table.players[i].name+`" class="leaderboard__picture">
               <span class="leaderboard__name">`+table.players[i].name+`</span>
               `+jobdiv+`
-              `+discdiv+`
               `+divid+`
               `+admindiv+`
               `+vipdiv+`
@@ -68,15 +60,6 @@ var admin = false
         }
         window.addEventListener('message', function (table) {
           let event = table.data;
-          if (event.type == 'css') {
-            if (event.content == 'old') {
-              document.getElementById("css_default").disabled = true;
-              $('link[href="stylenew.css"]').remove();
-              $('head').append('<link rel="stylesheet" type="text/css" href="styleold.css">');
-            } else {
-              $('head').append('<link rel="stylesheet" type="text/css" href="stylenew.css">');
-            }
-          }
           if (event.type == 'show') {
             showid = event.content.showid
             showvip = event.content.showvip

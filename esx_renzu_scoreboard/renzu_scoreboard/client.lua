@@ -74,8 +74,9 @@ RegisterCommand('scoreboard', function()
     end
     open = not open
     while open do
+        BlockWeaponWheelThisFrame()
         DisablePlayerFiring(PlayerId(),true)
-        Wait(5)
+        Wait(0)
     end
 end, false)
 RegisterKeyMapping('scoreboard', 'Scoreboard (player online)', 'keyboard', config.keybind)

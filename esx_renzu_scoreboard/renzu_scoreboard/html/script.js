@@ -36,7 +36,7 @@ var admin = false
               }
               var vipdiv = ''
               if (table.players[i].vip) {
-                vipdiv = `<span class="leaderboard__name vip" style="float: left;position: absolute;left: 5vw;font-weight: 700;font-size: 15px;bottom: 8%;color: #d206d2;"><i class="fad fa-star"></span>`
+                vipdiv = `<span class="leaderboard__name vip" style="float: left;position: absolute;left: 30px;font-weight: 700;font-size: 15px;bottom: 22px;color: #d206d2;"><i class="fad fa-star"></i></span>`
               }
               if (!showvip) {
                 vipdiv = ''

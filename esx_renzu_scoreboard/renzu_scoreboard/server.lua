@@ -129,7 +129,7 @@ function CreatePlayer(source,xPlayer,quee)
                 avatar = GetAvatar(source,f,l)
             end
             if players[source] == nil then
-                players[source] = {id = source, image = avatar, first = f, last = l, name = name, discordname = GetDiscordName(source,f,l), vip = v}
+                players[source] = {identifier = xPlayer.identifier, id = source, image = avatar, first = f, last = l, name = name, discordname = GetDiscordName(source,f,l), vip = v}
             end
         end
     end)
@@ -162,32 +162,25 @@ ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
             if config.CheckpingOnce and pings[v.id] ~= nil then
                 ping = pings[v.id]
             end
-            table.insert(list, 
-                    {
-                        id = v.id, 
-                        job = xPlayer.job.label, 
-                        name = v.name,
-                        discordname = v.discordname, 
-                        firstname = v.first, 
-                        lastname = v.last, 
-                        image = v.image, 
-                        ping = ping, 
-                        admin = xPlayer.getGroup() == 'superadmin' or xPlayer.getGroup() == 'admin', 
-                        vip = v.vip
-                    })
+            table.insert(list, {id = v.id, job = xPlayer.job.label, name = v.name, discordname = v.discordname, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = xPlayer.getGroup() == 'superadmin', vip = v.vip})
         end
     end
     local count = 0
     for k,v in pairs(players) do count = count + 1 end
     xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer ~= nil and players[source] ~= nil then
-        cb(list, whitelistedjobs, count, xPlayer.getGroup() == 'superadmin' or xPlayer.getGroup() == 'admin', players[source].image)
+        cb(list, whitelistedjobs, count, xPlayer.getGroup() == 'superadmin',players[source].image)
     end
 end)
 
 RegisterServerEvent('playerDropped')
 AddEventHandler('playerDropped', function()
     local source = tonumber(source)
+    for k,v in pairs(players) do
+        if v.id == source then
+            playernames[v.identifier] = nil
+        end
+    end
     players[source] = nil
     loading[source] = nil
 end)

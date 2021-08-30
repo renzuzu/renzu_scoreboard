@@ -66,7 +66,7 @@ RegisterNUICallback('close', function(data, cb)
     open = not open
 end)
 
-RegisterCommand('scoreboard', function()
+RegisterCommand(config.keybind, function()
     if not open then
         OpenScoreboard()
     else
@@ -79,7 +79,7 @@ RegisterCommand('scoreboard', function()
         Wait(0)
     end
 end, false)
-RegisterKeyMapping('scoreboard', 'Scoreboard (player online)', 'keyboard', config.keybind)
+RegisterKeyMapping(config.keybind, 'Scoreboard (player online)', 'keyboard', config.keybind)
 
 Citizen.CreateThread(function()
 	while true do

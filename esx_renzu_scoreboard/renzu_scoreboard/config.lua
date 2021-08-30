@@ -1,7 +1,7 @@
 config = {}
 config.Mysql = 'mysql-async' -- "ghmattisql", "msyql-async"
 config.css = 'new' -- new or old -- new = 4 column, old 2 column
-config.keybind = 'F10' -- change it whatever keybind do you like -- look more here https://docs.fivem.net/docs/game-references/input-mapper-parameter-ids/keyboard/
+config.keybind = 'F5' -- change it whatever keybind do you like -- look more here https://docs.fivem.net/docs/game-references/input-mapper-parameter-ids/keyboard/
 config.logo = 'https://forum.cfx.re/uploads/default/original/4X/b/1/9/b196908c7e5dfcd60aa9dca0020119fa55e184cb.png' -- url of logo
 config.UseIdentityname = false -- will not use steamname and it will use a firstname lastname from users table
 config.Showid = true -- if false only admins can see the id
@@ -24,5 +24,5 @@ config.RandomAvatars = { -- if steam avatar is not available, we will use Initia
 }
 config.useDiscordname = false -- use discord name
 config.UseDiscordAvatar = false -- if true only discord avatar will be used and not steam
-config.UseSelfUploadAvatar = true -- if true steam, discord avatar will be ignored: initials avatar is default if photo is missing/nil
+config.UseSelfUploadAvatar = false -- if true steam, discord avatar will be ignored: initials avatar is default if photo is missing/nil
 config.CheckpingOnce = true -- save and check only ping once (more optimized for large city)

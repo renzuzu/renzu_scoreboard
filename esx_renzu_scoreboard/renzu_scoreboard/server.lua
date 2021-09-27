@@ -162,7 +162,7 @@ ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
             if config.CheckpingOnce and pings[v.id] ~= nil then
                 ping = pings[v.id]
             end
-            table.insert(list, {id = v.id, job = xPlayer.job.label, name = v.name, discordname = v.discordname, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = xPlayer.getGroup() == 'superadmin' or xPlayer.getGroup() == 'admin' or xPlayer.getGroup() == 'mod', vip = v.vip})
+            table.insert(list, {id = v.id, job = xPlayer.job.label, name = v.name, discordname = v.discordname, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = xPlayer.getGroup() ~= 'user', vip = v.vip})
         end
     end
     local count = 0
@@ -236,7 +236,7 @@ end
 function GetDiscordAvatar(user,f,l)
     local id = string.gsub(ExtractIdentifiers(user).discord, "discord:", "")
     local Userdata = DiscordUserData(id)
-    if Userdata ~= nil then
+    if Userdata ~= nil and Userdata.avatar ~= nil then
         if (Userdata.avatar:sub(1, 1) and Userdata.avatar:sub(2, 2) == "_") then 
             imgURL = "https://cdn.discordapp.com/avatars/" .. id .. "/" .. Userdata.avatar .. ".gif";
         else 

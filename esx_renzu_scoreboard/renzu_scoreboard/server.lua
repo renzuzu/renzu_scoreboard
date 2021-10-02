@@ -43,17 +43,19 @@ function GetAvatar(source,first,last)
     local letters = config.RandomAvatars[initials]
     if steamhex ~= nil and steamhex ~= '' then
         local steamid = tonumber(string.gsub(steamhex, 'steam:', ''), 16)
-        PerformHttpRequest('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' .. GetConvar('steam_webApiKey') .. '&steamids=' .. steamid, function(e, data, h)
-            local data = json.decode(data) or {}
-            if data and data.response and data.response.players[1] then
-                avatar = data.response.players[1].avatarfull
-                if avatar ~= nil then
-                    image = avatar
+        if steamid ~= nil then
+            PerformHttpRequest('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' .. GetConvar('steam_webApiKey') .. '&steamids=' .. steamid, function(e, data, h)
+                local data = json.decode(data) or {}
+                if data and data.response and data.response.players[1] then
+                    avatar = data.response.players[1].avatarfull
+                    if avatar ~= nil then
+                        image = avatar
+                    end
                 end
-            end
-        end)
+            end)
+        end
         local c = 0
-        while image == nil and c < 100 do c = c + 1 Wait(1) end
+        while steamid ~= nil and image == nil and c < 100 do c = c + 1 Wait(1) end
         if image == nil then image = 'https://ui-avatars.com/api/?name='..first..'+'..last..'&background='..letters.background..'&color='..letters.color..'' end
         return image
     else
@@ -96,8 +98,11 @@ function CreatePlayer(source,xPlayer,quee)
                     print("id# "..source.." PLAYER IS REGISTERED Successfully",playernames[xPlayer.identifier].firstname)
                     -- you can pass any client events here once the player is loaded ex. playerloaded event
                     break
-                else
+                elseif xPlayer.source then
                     print('id# '..source..' is requed, still creating character?')
+                else
+                    print('id# '..source..' is not online anymore, removing from qued list')
+                    break
                 end
             end
         end

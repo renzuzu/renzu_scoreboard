@@ -44,9 +44,13 @@ function GetAvatar(source,first,last)
     if steamhex ~= nil and steamhex ~= '' then
         local steamid = tonumber(string.gsub(steamhex, 'steam:', ''), 16)
         PerformHttpRequest('http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' .. GetConvar('steam_webApiKey') .. '&steamids=' .. steamid, function(e, data, h)
-            local data = json.decode(data)
-            local avatar = data.response.players[1].avatarfull
-            image = avatar
+            local data = json.decode(data) or {}
+            if data and data.response and data.response.players[1] then
+                avatar = data.response.players[1].avatarfull
+                if avatar ~= nil then
+                    image = avatar
+                end
+            end
         end)
         local c = 0
         while image == nil and c < 100 do c = c + 1 Wait(1) end
@@ -70,7 +74,7 @@ AddEventHandler('renzu_scoreboard:playerloaded', function()
     elseif xPlayer ~= nil and playernames[xPlayer.identifier] == nil then
         CreatePlayer(source,xPlayer,true)
     else
-        print('Xplayer is nil or player is not register in server table')
+        print('Xplayer is nil or player is not register in server table',playernames[xPlayer.identifier],playernames[xPlayer.identifier].firstname)
     end
 end)
 
@@ -169,7 +173,7 @@ ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
     for k,v in pairs(players) do count = count + 1 end
     xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer ~= nil and players[source] ~= nil then
-        cb(list, whitelistedjobs, count, xPlayer.getGroup() == 'superadmin',players[source].image)
+        cb(list, whitelistedjobs, count, xPlayer.getGroup() ~= 'user',players[source].image)
     end
 end)
 

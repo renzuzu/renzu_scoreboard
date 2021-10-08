@@ -80,15 +80,18 @@ AddEventHandler('renzu_scoreboard:playerloaded', function()
     end
 end)
 
+local quedplayer = {}
 function CreatePlayer(source,xPlayer,quee)
     local initials = math.random(1,#config.RandomAvatars)
     local letters = config.RandomAvatars[initials]
     CreateThread(function()
         if quee then
             print("id# "..source.."  QUED")
+            quedplayer[source] = 0
             if xPlayer ~= nil and playernames[xPlayer.identifier] == nil then playernames[xPlayer.identifier] = {} end
-            while playernames[xPlayer.identifier].firstname == nil or playernames[v.identifier].firstname ~= nil and playernames[v.identifier].firstname:len() >= 3 do 
+            while playernames[xPlayer.identifier].firstname == nil and quedplayer[source] ~= nil and quedplayer[source] < 20 or playernames[v.identifier].firstname ~= nil and playernames[v.identifier].firstname:len() >= 3 and quedplayer[source] ~= nil and quedplayer[source] < 20 do 
                 Wait(10000)
+                quedplayer[source] = quedplayer[source] + 1
                 print("id# "..source.."  CHECKING PLAYER INFO")
                 local playerinfo = Database(config.Mysql,'fetchAll','SELECT * FROM users WHERE identifier = @identifier', {['@identifier'] = xPlayer.identifier})
                 if #playerinfo > 0 and playerinfo[1] ~= nil and playerinfo[1].firstname ~= nil and playerinfo[1].firstname ~= '' and playerinfo[1].firstname ~= 'null' then
@@ -100,6 +103,9 @@ function CreatePlayer(source,xPlayer,quee)
                     break
                 elseif xPlayer.source then
                     print('id# '..source..' is requed, still creating character?')
+                    if quedplayer[source] >= 20 then
+                        break
+                    end
                 else
                     print('id# '..source..' is not online anymore, removing from qued list')
                     break
@@ -188,6 +194,11 @@ AddEventHandler('playerDropped', function()
     for k,v in pairs(players) do
         if v.id == source then
             playernames[v.identifier] = nil
+        end
+    end
+    for k,v in pairs(quedplayer) do
+        if source == k then
+            quedplayer[k] = nil
         end
     end
     players[source] = nil

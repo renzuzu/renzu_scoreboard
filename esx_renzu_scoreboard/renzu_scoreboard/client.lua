@@ -1,6 +1,7 @@
 ESX = nil
 local open = false
 local loaded = false
+PlayerData = {}
 Citizen.CreateThread(function()
     Wait(100)
 	while ESX == nil do TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end) Citizen.Wait(0) end
@@ -10,6 +11,12 @@ Citizen.CreateThread(function()
     })
     Wait(2500)
     TriggerServerEvent('renzu_scoreboard:playerloaded')
+end)
+
+RegisterNetEvent('esx:setJob')
+AddEventHandler('esx:setJob', function(job)
+	PlayerData.job = job
+	TriggerServerEvent('renzu_scoreboard:setjob',PlayerData.job.name)
 end)
 
 RegisterNetEvent('renzu_scoreboard:loaded') -- for initial purpose if restarted

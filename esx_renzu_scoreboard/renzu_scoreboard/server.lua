@@ -65,6 +65,11 @@ end
 
 local loading = {}
 local qued = {}
+RegisterServerEvent('renzu_scoreboard:setjob')
+AddEventHandler('renzu_scoreboard:setjob', function()
+    PopulatePlayer(source)
+end)
+
 RegisterServerEvent('renzu_scoreboard:playerloaded')
 AddEventHandler('renzu_scoreboard:playerloaded', function()
     local source = tonumber(source)

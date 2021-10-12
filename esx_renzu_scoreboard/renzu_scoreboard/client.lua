@@ -48,9 +48,13 @@ function OpenScoreboard()
     if not config.Showid then
         showid = LocalPlayer.state.isAdmin
     end
+    local bobo = {}
+    for k,v in pairs(GlobalState.Player_list) do
+        table.insert(bobo, v)
+    end
     SendNUIMessage({
         type = 'show',
-        content = {players = GlobalState.Player_list, whitelistedjobs = config.whitelistedjobs, count = GlobalState.PlayerCount, max = GetConvarInt('sv_maxclients', 256), useidentity = config.UseIdentityname, usediscordname = config.useDiscordname, isadmin = LocalPlayer.state.isAdmin, showid = showid, showadmins = config.ShowAdmins, showvip = config.ShowVips, showjobs = config.ShowJobs, myimage = LocalPlayer.state.Avatar, logo = config.logo}
+        content = {players = bobo, whitelistedjobs = config.whitelistedjobs, count = GlobalState.PlayerCount, max = GetConvarInt('sv_maxclients', 256), useidentity = config.UseIdentityname, usediscordname = config.useDiscordname, isadmin = LocalPlayer.state.isAdmin, showid = showid, showadmins = config.ShowAdmins, showvip = config.ShowVips, showjobs = config.ShowJobs, myimage = LocalPlayer.state.Avatar, logo = config.logo}
     })
     Wait(50)
     SetNuiFocus(true,true)

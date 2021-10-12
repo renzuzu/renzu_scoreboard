@@ -3,56 +3,57 @@ var admin = false
         var showadmins = false
         var showvip = false
         var showjobs = false
-        function Addplayers(table,identity) {
-            for (const i in table.whitelistedjobs) {
+        function Addplayers(cache,identity) {
+            for (const i in cache.whitelistedjobs) {
               $("#jobs").prepend(`<span style="position: relative;float:left;margin-right: 20px;opacity: 1.0;margin-top: 20px;">
-              <span class="leaderboard__title--bottom" style="opacity: 1.0;">`+table.whitelistedjobs[i].fa+` `+table.whitelistedjobs[i].label+`</span>
-              <span class="leaderboard__title--bottom" style="float: right;"><content id="jobcount">`+table.whitelistedjobs[i].count+`</content></span>
+              <span class="leaderboard__title--bottom" style="opacity: 1.0;">`+cache.whitelistedjobs[i].fa+` `+cache.whitelistedjobs[i].label+`</span>
+              <span class="leaderboard__title--bottom" style="float: right;"><content id="jobcount">`+cache.whitelistedjobs[i].count+`</content></span>
               </span>`);
             }
-            for (const i in table.players) {
-              if (table.useidentity) {
-                table.players[i].name = ''+table.players[i].firstname+' '+table.players[i].lastname+''
+            for (const i in cache.players) {
+              console.log(i,'gago',cache.players[i])
+              if (cache.useidentity) {
+                cache.players[i].name = ''+cache.players[i].firstname+' '+cache.players[i].lastname+''
               }
-              // if (table.usediscordname) {
-              //   table.players[i].name = ''+table.players[i].discordname+''
+              // if (cache.usediscordname) {
+              //   cache.players[i].name = ''+cache.players[i].discordname+''
               // }
-              ping = '<i class="fad fa-wifi"></i> '+table.players[i].ping+''
-              if (table.players[i].ping > 300) {
-                ping = '<i style="color:red;" class="fad fa-wifi"></i> '+table.players[i].ping+''
-              } else if (table.players[i].ping > 100) {
-                ping = '<i style="color:yellow;" class="fad fa-wifi"></i> '+table.players[i].ping+''
+              ping = '<i class="fad fa-wifi"></i> '+cache.players[i].ping+''
+              if (cache.players[i].ping > 300) {
+                ping = '<i style="color:red;" class="fad fa-wifi"></i> '+cache.players[i].ping+''
+              } else if (cache.players[i].ping > 100) {
+                ping = '<i style="color:yellow;" class="fad fa-wifi"></i> '+cache.players[i].ping+''
               }
-              var divid = `<span class="leaderboard__name" style="float: left;position: absolute;left: -1.5vw;bottom: 0%;font-weight: 700;font-size: 14px;width: auto;min-width: 55px;background: #0808087d;border-radius: 5px;color: #daebf5;"><i class="fad fa-id-card"></i> `+table.players[i].id+`</span>`
+              var divid = `<span class="leaderboard__name" style="float: left;position: absolute;left: -1.5vw;bottom: 0%;font-weight: 700;font-size: 14px;width: auto;min-width: 55px;background: #0808087d;border-radius: 5px;color: #daebf5;"><i class="fad fa-id-card"></i> `+cache.players[i].id+`</span>`
               if (!showid && !admin) {
                 divid = ''
               }
               var admindiv = ''
-              if (table.players[i].admin) {
+              if (cache.players[i].admin) {
                 admindiv = `<span class="leaderboard__name admin" style="float: left;position: absolute;left: 3vw;font-weight: 700;font-size: 15px;bottom: 8%;color: gold;"><i class="fad fa-crown"></i></span>`
               }
               if (!showadmins) {
                 admindiv = ''
               }
               var vipdiv = ''
-              if (table.players[i].vip) {
+              if (cache.players[i].vip) {
                 vipdiv = `<span class="leaderboard__name vip" style="float: left;position: absolute;left: 30px;font-weight: 700;font-size: 15px;bottom: 22px;color: #d206d2;"><i class="fad fa-star"></i></span>`
               }
               if (!showvip) {
                 vipdiv = ''
               }
-              var jobdiv = `<span class="leaderboard__name job" style="float: left;position: absolute;left: 30vw;font-weight: 700;font-size: 15px;"><i class="fad fa-user-tie"></i> `+capitalizeFirstLetter(table.players[i].job)+`</span>`
+              var jobdiv = `<span class="leaderboard__name job" style="float: left;position: absolute;left: 30vw;font-weight: 700;font-size: 15px;"><i class="fad fa-user-tie"></i> `+capitalizeFirstLetter(cache.players[i].job)+`</span>`
               if (!showjobs && !admin) {
                 jobdiv = ''
               }
               var discdiv = ''
-              if (table.usediscordname) {
-                discdiv = '<span class="leaderboard__name discordname" style="float: left;position: absolute;left: 3vw;font-weight: 700;font-size: 1vh;bottom: 0.5vh;"><i class="fab fa-discord"></i> '+table.players[i].discordname+'</span>'
+              if (cache.usediscordname) {
+                discdiv = '<span class="leaderboard__name discordname" style="float: left;position: absolute;left: 3vw;font-weight: 700;font-size: 1vh;bottom: 0.5vh;"><i class="fab fa-discord"></i> '+cache.players[i].discordname+'</span>'
               }
-              //console.log(i,table[i].name)
+              //console.log(i,cache[i].name)
               $("#main").prepend(`<article class="leaderboard__profile">
-              <img src="`+table.players[i].image+`" alt="`+table.players[i].name+`" class="leaderboard__picture">
-              <span class="leaderboard__name">`+table.players[i].name+`</span>
+              <img src="`+cache.players[i].image+`" alt="`+cache.players[i].name+`" class="leaderboard__picture">
+              <span class="leaderboard__name">`+cache.players[i].name+`</span>
               `+jobdiv+`
               `+discdiv+`
               `+divid+`
@@ -66,8 +67,8 @@ var admin = false
         function capitalizeFirstLetter(string) {
           return string.charAt(0).toUpperCase() + string.slice(1);
         }
-        window.addEventListener('message', function (table) {
-          let event = table.data;
+        window.addEventListener('message', function (cache) {
+          let event = cache.data;
           if (event.type == 'css') {
             if (event.content == 'old') {
               document.getElementById("css_default").disabled = true;

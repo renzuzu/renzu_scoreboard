@@ -81,7 +81,7 @@ AddEventHandler('renzu_scoreboard:playerloaded', function()
     elseif xPlayer ~= nil and playernames[xPlayer.identifier] == nil then
         CreatePlayer(source,xPlayer,true)
     else
-        print('Xplayer is nil or player is not register in server table',playernames[xPlayer.identifier],playernames[xPlayer.identifier].firstname)
+        print('Xplayer is nil or player is not register in server table')
     end
 end)
 
@@ -158,10 +158,9 @@ function CreatePlayer(source,xPlayer,quee)
 end
 
 local pings = {}
-
+local list = {}
 function PopulatePlayer(source)
     local source = source
-    local list = {}
     local whitelistedjobs = {}
     local source = tonumber(source)
     for k,v in pairs(players) do
@@ -193,7 +192,7 @@ function PopulatePlayer(source)
     for k,v in pairs(players) do count = count + 1 end
     xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer ~= nil and players[source] ~= nil then
-        GlobalState.Player_list = list
+        GlobalState.Player_list = deepcopy(list)
         GlobalState.Whitelistedjobs = whitelistedjobs
         GlobalState.PlayerCount = count
         Player(source).state.isAdmin = xPlayer.getGroup() ~= 'user'
@@ -201,6 +200,26 @@ function PopulatePlayer(source)
         Player(source).state.Loaded = true
     end
 end
+
+function deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+        end
+        setmetatable(copy, deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
+RegisterNetEvent('updateb')
+AddEventHandler('updateb', function(list)
+    GlobalState.Player_list = deepcopy(list)
+end)
 
 RegisterServerEvent('playerDropped')
 AddEventHandler('playerDropped', function()
@@ -215,9 +234,13 @@ AddEventHandler('playerDropped', function()
             quedplayer[k] = nil
         end
     end
-    GlobalState.Player_list[source] = nil
+    list[source] = nil
+    Wait(1000)
+    TriggerEvent('updateb',deepcopy(list))
+    --GlobalState.Player_list = deepcopy(list)
     players[source] = nil
     loading[source] = nil
+    GlobalState.PlayerCount = GlobalState.PlayerCount - 1
 end)
 
 function Database(plugin,type,query,var)

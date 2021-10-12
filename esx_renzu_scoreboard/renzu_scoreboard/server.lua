@@ -186,7 +186,7 @@ function PopulatePlayer(source)
             if config.CheckpingOnce and pings[v.id] ~= nil then
                 ping = pings[v.id]
             end
-            table.insert(list, {id = v.id, job = xPlayer.job.label, name = v.name, discordname = v.discordname, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = xPlayer.getGroup() ~= 'user', vip = v.vip})
+            list[source] = {id = v.id, job = xPlayer.job.label, name = v.name, discordname = v.discordname, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = xPlayer.getGroup() ~= 'user', vip = v.vip}
         end
     end
     local count = 0
@@ -215,6 +215,7 @@ AddEventHandler('playerDropped', function()
             quedplayer[k] = nil
         end
     end
+    GlobalState.Player_list[source] = nil
     players[source] = nil
     loading[source] = nil
 end)

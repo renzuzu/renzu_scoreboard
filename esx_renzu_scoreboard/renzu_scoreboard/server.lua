@@ -82,6 +82,7 @@ end)
 
 local quedplayer = {}
 function CreatePlayer(source,xPlayer,quee)
+    local source = source
     local initials = math.random(1,#config.RandomAvatars)
     local letters = config.RandomAvatars[initials]
     CreateThread(function()
@@ -147,11 +148,14 @@ function CreatePlayer(source,xPlayer,quee)
                 players[source] = {identifier = xPlayer.identifier, id = source, image = avatar, first = f, last = l, name = name, discordname = GetDiscordName(source,f,l), vip = v}
             end
         end
+        PopulatePlayer(source)
     end)
 end
 
 local pings = {}
-ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
+
+function PopulatePlayer(source)
+    local source = source
     local list = {}
     local whitelistedjobs = {}
     local source = tonumber(source)
@@ -184,9 +188,14 @@ ESX.RegisterServerCallback('renzu_scoreboard:playerlist', function (source, cb)
     for k,v in pairs(players) do count = count + 1 end
     xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer ~= nil and players[source] ~= nil then
-        cb(list, whitelistedjobs, count, xPlayer.getGroup() ~= 'user',players[source].image)
+        GlobalState.Player_list = list
+        GlobalState.Whitelistedjobs = whitelistedjobs
+        GlobalState.PlayerCount = count
+        Player(source).state.isAdmin = xPlayer.getGroup() ~= 'user'
+        Player(source).state.Avatar = players[source].image
+        Player(source).state.Loaded = true
     end
-end)
+end
 
 RegisterServerEvent('playerDropped')
 AddEventHandler('playerDropped', function()

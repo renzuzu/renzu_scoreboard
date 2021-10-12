@@ -31,25 +31,22 @@ RegisterNUICallback('avatarupload', function(data, cb)
 end)
 
 function OpenScoreboard()
-    ESX.TriggerServerCallback("renzu_scoreboard:playerlist",function(data,jobs,count,admin,myimage)
-        for k,v in pairs(config.whitelistedjobs) do
-            v.count = 0
-            if jobs[v.name] ~= nil then
-                v.count = jobs[v.name]
-            end
+    for k,v in pairs(config.whitelistedjobs) do
+        v.count = 0
+        if GlobalState.Whitelistedjobs[v.name] ~= nil then
+            v.count = GlobalState.Whitelistedjobs[v.name]
         end
-        local showid = true
-        if not config.Showid then
-            showid = admin
-        end
-        SendNUIMessage({
-            type = 'show',
-            content = {players = data, whitelistedjobs = config.whitelistedjobs, count = count, max = GetConvarInt('sv_maxclients', 256), useidentity = config.UseIdentityname, usediscordname = config.useDiscordname, isadmin = admin, showid = showid, showadmins = config.ShowAdmins, showvip = config.ShowVips, showjobs = config.ShowJobs, myimage = myimage, logo = config.logo}
-        })
-        Wait(50)
-        SetNuiFocus(true,true)
-        SetNuiFocusKeepInput(true)
-    end)
+    end
+    local showid = true
+    if not config.Showid then
+        showid = LocalPlayer.state.isAdmin
+    end
+    SendNUIMessage({
+        type = 'show',
+        content = {players = GlobalState.Player_list, whitelistedjobs = config.whitelistedjobs, count = GlobalState.PlayerCount, max = GetConvarInt('sv_maxclients', 256), useidentity = config.UseIdentityname, usediscordname = config.useDiscordname, isadmin = LocalPlayer.state.isAdmin, showid = showid, showadmins = config.ShowAdmins, showvip = config.ShowVips, showjobs = config.ShowJobs, myimage = LocalPlayer.state.Avatar, logo = config.logo}
+    })
+    Wait(50)
+    SetNuiFocus(true,true)
 end
 
 function close()
@@ -67,13 +64,14 @@ RegisterNUICallback('close', function(data, cb)
 end)
 
 RegisterCommand(config.keybind, function()
-    if not open then
+    if not open and LocalPlayer.state.Loaded then
         OpenScoreboard()
+        open = not open
     else
+        open = not open
         close()
     end
-    open = not open
-    while open do
+    while open and LocalPlayer.state.isAdmin do
         BlockWeaponWheelThisFrame()
         DisablePlayerFiring(PlayerId(),true)
         Wait(0)

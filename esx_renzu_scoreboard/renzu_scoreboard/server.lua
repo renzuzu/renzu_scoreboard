@@ -5,6 +5,7 @@ local DiscToken = ".XssX9w." -- change this to your own discord token
 local FormattedToken = "Bot " .. DiscToken
 ESX = nil
 local loaded = false
+
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 CreateThread(function()
     Wait(200)
@@ -91,35 +92,37 @@ function CreatePlayer(source,xPlayer,quee)
     local initials = math.random(1,#config.RandomAvatars)
     local letters = config.RandomAvatars[initials]
     CreateThread(function()
+        local src = source
+        local xPlayer = xPlayer
         if quee then
-            print("id# "..source.."  QUED")
-            quedplayer[source] = 0
+            print("id# "..src.."  QUED")
+            quedplayer[src] = 0
             if xPlayer ~= nil and playernames[xPlayer.identifier] == nil then playernames[xPlayer.identifier] = {} end
-            while playernames[xPlayer.identifier].firstname == nil and quedplayer[source] ~= nil and quedplayer[source] < 20 or playernames[v.identifier].firstname ~= nil and playernames[v.identifier].firstname:len() >= 3 and quedplayer[source] ~= nil and quedplayer[source] < 20 do 
+            while playernames[xPlayer.identifier].firstname == nil and quedplayer[src] ~= nil and quedplayer[src] < 20 or playernames[v.identifier].firstname ~= nil and playernames[v.identifier].firstname:len() >= 3 and quedplayer[src] ~= nil and quedplayer[src] < 20 do 
                 Wait(10000)
-                quedplayer[source] = quedplayer[source] + 1
-                print("id# "..source.."  CHECKING PLAYER INFO")
+                quedplayer[src] = quedplayer[src] + 1
+                print("id# "..src.."  CHECKING PLAYER INFO")
                 local playerinfo = Database(config.Mysql,'fetchAll','SELECT * FROM users WHERE identifier = @identifier', {['@identifier'] = xPlayer.identifier})
                 if #playerinfo > 0 and playerinfo[1] ~= nil and playerinfo[1].firstname ~= nil and playerinfo[1].firstname ~= '' and playerinfo[1].firstname ~= 'null' then
                     for k,v in pairs(playerinfo) do
                         playernames[v.identifier] = v
                     end
-                    print("id# "..source.." PLAYER IS REGISTERED Successfully",playernames[xPlayer.identifier].firstname)
+                    print("id# "..src.." PLAYER IS REGISTERED Successfully",playernames[xPlayer.identifier].firstname)
                     -- you can pass any client events here once the player is loaded ex. playerloaded event
                     break
                 elseif xPlayer.source then
-                    print('id# '..source..' is requed, still creating character?')
-                    if quedplayer[source] >= 20 then
+                    print('id# '..src..' is requed, still creating character?')
+                    if quedplayer[src] >= 20 then
                         break
                     end
                 else
-                    print('id# '..source..' is not online anymore, removing from qued list')
+                    print('id# '..src..' is not online anymore, removing from qued list')
                     break
                 end
             end
         end
-        if players[source] == nil and xPlayer ~= nil and loading[source] == nil then
-            loading[source] = true
+        if players[src] == nil and xPlayer ~= nil and loading[src] == nil then
+            loading[src] = true
             playerdata = nil
             local f,l,v = '', '', false
             if playernames[xPlayer.identifier] ~= nil and playernames[xPlayer.identifier].firstname ~= nil then
@@ -131,7 +134,7 @@ function CreatePlayer(source,xPlayer,quee)
                     v = playernames[xPlayer.identifier].vip ~= nil
                 end
             end
-            local name = GetPlayerName(source)
+            local name = GetPlayerName(src)
             if (name:find("src") ~= nil) then
                 name = "Blacklisted name"
             end
@@ -145,15 +148,15 @@ function CreatePlayer(source,xPlayer,quee)
                     avatar = 'https://ui-avatars.com/api/?name='..f..'+'..l..'&background='..letters.background..'&color='..letters.color..''
                 end
             elseif config.UseDiscordAvatar then
-                avatar = GetDiscordAvatar(source,f,l)
+                avatar = GetDiscordAvatar(src,f,l)
             else
-                avatar = GetAvatar(source,f,l)
+                avatar = GetAvatar(src,f,l)
             end
-            if players[source] == nil then
-                players[source] = {identifier = xPlayer.identifier, id = source, image = avatar, first = f, last = l, name = name, discordname = GetDiscordName(source,f,l), vip = v}
+            if players[src] == nil then
+                players[src] = {identifier = xPlayer.identifier, id = src, image = avatar, first = f, last = l, name = name, discordname = GetDiscordName(src,f,l), vip = v}
             end
         end
-        PopulatePlayer(source)
+        PopulatePlayer(src)
     end)
 end
 
@@ -200,6 +203,12 @@ function PopulatePlayer(source)
         Player(source).state.Loaded = true
     end
 end
+
+RegisterCommand('resetscore', function()
+    GlobalState.Player_list = {}
+    GlobalState.Whitelistedjobs = {}
+    GlobalState.PlayerCount = 0
+end)
 
 function deepcopy(orig)
     local orig_type = type(orig)

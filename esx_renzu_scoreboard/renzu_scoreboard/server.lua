@@ -204,12 +204,6 @@ function PopulatePlayer(source)
     end
 end
 
-RegisterCommand('resetscore', function()
-    GlobalState.Player_list = {}
-    GlobalState.Whitelistedjobs = {}
-    GlobalState.PlayerCount = 0
-end)
-
 function deepcopy(orig)
     local orig_type = type(orig)
     local copy

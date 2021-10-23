@@ -184,7 +184,9 @@ function PopulatePlayer(source)
                 break
             end
         end
-        if xPlayer ~= nil then
+        if xPlayer == nil then
+            list[k] = nil
+        else
             local ping = nil
             if pings[v.id] == nil and config.CheckpingOnce then
                 pings[v.id] = GetPlayerPing(v.id)
@@ -193,9 +195,6 @@ function PopulatePlayer(source)
             end
             if config.CheckpingOnce and pings[v.id] ~= nil then
                 ping = pings[v.id]
-            end
-            for k2,v2 in pairs(list) do
-                if v2.firstname == v.first then list[k2] = nil end
             end
             list[source] = {id = v.id, job = xPlayer.job.label, name = v.name, discordname = v.discordname, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = xPlayer.getGroup() ~= 'user', vip = v.vip}
         end

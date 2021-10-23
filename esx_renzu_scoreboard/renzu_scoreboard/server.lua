@@ -87,13 +87,13 @@ AddEventHandler('renzu_scoreboard:playerloaded', function()
 end)
 
 local quedplayer = {}
-function CreatePlayer(source,xPlayer,quee)
-    local source = source
+function CreatePlayer(s,x,quee)
+    local source = s
     local initials = math.random(1,#config.RandomAvatars)
     local letters = config.RandomAvatars[initials]
     CreateThread(function()
-        local src = source
-        local xPlayer = xPlayer
+        local src = s
+        local xPlayer = x
         if quee then
             print("id# "..src.."  QUED")
             quedplayer[src] = 0
@@ -152,11 +152,17 @@ function CreatePlayer(source,xPlayer,quee)
             else
                 avatar = GetAvatar(src,f,l)
             end
+            for k2,v2 in pairs(players) do
+                if v2.identifier == xPlayer.identifier then players[k2] = nil end
+            end
             if players[src] == nil then
                 players[src] = {identifier = xPlayer.identifier, id = src, image = avatar, first = f, last = l, name = name, discordname = GetDiscordName(src,f,l), vip = v}
             end
         end
         PopulatePlayer(src)
+        xPlayer = nil
+        src = nil
+        return
     end)
 end
 
@@ -188,14 +194,23 @@ function PopulatePlayer(source)
             if config.CheckpingOnce and pings[v.id] ~= nil then
                 ping = pings[v.id]
             end
+            for k2,v2 in pairs(list) do
+                if v2.firstname == v.first then list[k2] = nil end
+            end
             list[source] = {id = v.id, job = xPlayer.job.label, name = v.name, discordname = v.discordname, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = xPlayer.getGroup() ~= 'user', vip = v.vip}
         end
     end
     local count = 0
+    local temporarylist <const> = list
     for k,v in pairs(players) do count = count + 1 end
     xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer ~= nil and players[source] ~= nil then
-        GlobalState.Player_list = deepcopy(list)
+        GlobalState.Player_list = {}
+        collectgarbage()
+        Wait(10) -- fu weird logic
+        -- avoid having cache from higher fx version > recommended 4394
+        -- it was a weird bug happen on my garage too, have to put tablename = {} in the end of function/thread to workaround, not quite sure what the cause.
+        GlobalState.Player_list = temporarylist
         GlobalState.Whitelistedjobs = whitelistedjobs
         GlobalState.PlayerCount = count
         Player(source).state.isAdmin = xPlayer.getGroup() ~= 'user'
@@ -220,8 +235,8 @@ function deepcopy(orig)
 end
 
 RegisterNetEvent('updateb')
-AddEventHandler('updateb', function(list)
-    GlobalState.Player_list = deepcopy(list)
+AddEventHandler('updateb', function(ret)
+    GlobalState.Player_list = ret
 end)
 
 RegisterServerEvent('playerDropped')

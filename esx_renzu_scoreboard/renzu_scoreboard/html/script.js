@@ -3,6 +3,7 @@ var admin = false
         var showadmins = false
         var showvip = false
         var showjobs = false
+        var cachefuck = {}
         function Addplayers(cache,identity) {
             for (const i in cache.whitelistedjobs) {
               $("#jobs").prepend(`<span style="position: relative;float:left;margin-right: 20px;opacity: 1.0;margin-top: 20px;">
@@ -11,58 +12,60 @@ var admin = false
               </span>`);
             }
             for (const i in cache.players) {
-              console.log(i,'gago',cache.players[i])
-              if (cache.useidentity) {
-                cache.players[i].name = ''+cache.players[i].firstname+' '+cache.players[i].lastname+''
+              if (!cachefuck[cache.players[i].id]) {
+                cachefuck[cache.players[i].id] = true
+                if (cache.useidentity) {
+                  cache.players[i].name = ''+cache.players[i].firstname+' '+cache.players[i].lastname+''
+                }
+                // if (cache.usediscordname) {
+                //   cache.players[i].name = ''+cache.players[i].discordname+''
+                // }
+                ping = '<i class="fad fa-wifi"></i> '+cache.players[i].ping+''
+                if (cache.players[i].ping > 300) {
+                  ping = '<i style="color:red;" class="fad fa-wifi"></i> '+cache.players[i].ping+''
+                } else if (cache.players[i].ping > 100) {
+                  ping = '<i style="color:yellow;" class="fad fa-wifi"></i> '+cache.players[i].ping+''
+                }
+                var divid = `<span class="leaderboard__name" style="float: left;position: absolute;left: -1.5vw;bottom: 0%;font-weight: 700;font-size: 14px;width: auto;min-width: 55px;background: #0808087d;border-radius: 5px;color: #daebf5;"><i class="fad fa-id-card"></i> `+cache.players[i].id+`</span>`
+                if (!showid && !admin) {
+                  divid = ''
+                }
+                var admindiv = ''
+                if (cache.players[i].admin) {
+                  admindiv = `<span class="leaderboard__name admin" style="float: left;position: absolute;left: 3vw;font-weight: 700;font-size: 15px;bottom: 8%;color: gold;"><i class="fad fa-crown"></i></span>`
+                }
+                if (!showadmins) {
+                  admindiv = ''
+                }
+                var vipdiv = ''
+                if (cache.players[i].vip) {
+                  vipdiv = `<span class="leaderboard__name vip" style="float: left;position: absolute;left: 30px;font-weight: 700;font-size: 15px;bottom: 22px;color: #d206d2;"><i class="fad fa-star"></i></span>`
+                }
+                if (!showvip) {
+                  vipdiv = ''
+                }
+                var jobdiv = `<span class="leaderboard__name job" style="float: left;position: absolute;left: 30vw;font-weight: 700;font-size: 15px;"><i class="fad fa-user-tie"></i> `+capitalizeFirstLetter(cache.players[i].job)+`</span>`
+                if (!showjobs && !admin) {
+                  jobdiv = ''
+                }
+                var discdiv = ''
+                if (cache.usediscordname) {
+                  discdiv = '<span class="leaderboard__name discordname" style="float: left;position: absolute;left: 3vw;font-weight: 700;font-size: 1vh;bottom: 0.5vh;"><i class="fab fa-discord"></i> '+cache.players[i].discordname+'</span>'
+                }
+                //console.log(i,cache[i].name)
+                $("#main").prepend(`<article class="leaderboard__profile">
+                <img src="`+cache.players[i].image+`" alt="`+cache.players[i].name+`" class="leaderboard__picture">
+                <span class="leaderboard__name">`+cache.players[i].name+`</span>
+                `+jobdiv+`
+                `+discdiv+`
+                `+divid+`
+                `+admindiv+`
+                `+vipdiv+`
+                <span class="leaderboard__value">`+ping+`<span>ms</span></span>
+                </article>`);
               }
-              // if (cache.usediscordname) {
-              //   cache.players[i].name = ''+cache.players[i].discordname+''
-              // }
-              ping = '<i class="fad fa-wifi"></i> '+cache.players[i].ping+''
-              if (cache.players[i].ping > 300) {
-                ping = '<i style="color:red;" class="fad fa-wifi"></i> '+cache.players[i].ping+''
-              } else if (cache.players[i].ping > 100) {
-                ping = '<i style="color:yellow;" class="fad fa-wifi"></i> '+cache.players[i].ping+''
-              }
-              var divid = `<span class="leaderboard__name" style="float: left;position: absolute;left: -1.5vw;bottom: 0%;font-weight: 700;font-size: 14px;width: auto;min-width: 55px;background: #0808087d;border-radius: 5px;color: #daebf5;"><i class="fad fa-id-card"></i> `+cache.players[i].id+`</span>`
-              if (!showid && !admin) {
-                divid = ''
-              }
-              var admindiv = ''
-              if (cache.players[i].admin) {
-                admindiv = `<span class="leaderboard__name admin" style="float: left;position: absolute;left: 3vw;font-weight: 700;font-size: 15px;bottom: 8%;color: gold;"><i class="fad fa-crown"></i></span>`
-              }
-              if (!showadmins) {
-                admindiv = ''
-              }
-              var vipdiv = ''
-              if (cache.players[i].vip) {
-                vipdiv = `<span class="leaderboard__name vip" style="float: left;position: absolute;left: 30px;font-weight: 700;font-size: 15px;bottom: 22px;color: #d206d2;"><i class="fad fa-star"></i></span>`
-              }
-              if (!showvip) {
-                vipdiv = ''
-              }
-              var jobdiv = `<span class="leaderboard__name job" style="float: left;position: absolute;left: 30vw;font-weight: 700;font-size: 15px;"><i class="fad fa-user-tie"></i> `+capitalizeFirstLetter(cache.players[i].job)+`</span>`
-              if (!showjobs && !admin) {
-                jobdiv = ''
-              }
-              var discdiv = ''
-              if (cache.usediscordname) {
-                discdiv = '<span class="leaderboard__name discordname" style="float: left;position: absolute;left: 3vw;font-weight: 700;font-size: 1vh;bottom: 0.5vh;"><i class="fab fa-discord"></i> '+cache.players[i].discordname+'</span>'
-              }
-              //console.log(i,cache[i].name)
-              $("#main").prepend(`<article class="leaderboard__profile">
-              <img src="`+cache.players[i].image+`" alt="`+cache.players[i].name+`" class="leaderboard__picture">
-              <span class="leaderboard__name">`+cache.players[i].name+`</span>
-              `+jobdiv+`
-              `+discdiv+`
-              `+divid+`
-              `+admindiv+`
-              `+vipdiv+`
-              <span class="leaderboard__value">`+ping+`<span>ms</span></span>
-              </article>`);
             }
-
+            cachefuck = {}
         }
         function capitalizeFirstLetter(string) {
           return string.charAt(0).toUpperCase() + string.slice(1);

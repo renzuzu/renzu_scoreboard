@@ -172,6 +172,7 @@ function PopulatePlayer(source)
     local source = source
     local whitelistedjobs = {}
     local source = tonumber(source)
+    list = {} -- FUuu
     for k,v in pairs(players) do
         local xPlayer = ESX.GetPlayerFromId(tonumber(v.id))
         for _, job in pairs(config.whitelistedjobs) do
@@ -196,7 +197,9 @@ function PopulatePlayer(source)
             if config.CheckpingOnce and pings[v.id] ~= nil then
                 ping = pings[v.id]
             end
-            list[source] = {id = v.id, job = xPlayer.job.label, name = v.name, discordname = v.discordname, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = xPlayer.getGroup() ~= 'user', vip = v.vip}
+            if not list[xPlayer.identifier] then
+                list[xPlayer.identifier] = {id = v.id, job = xPlayer.job.label, name = v.name, discordname = v.discordname, firstname = v.first, lastname = v.last, image = v.image, ping = ping, admin = xPlayer.getGroup() ~= 'user', vip = v.vip}
+            end
         end
     end
     local count = 0
